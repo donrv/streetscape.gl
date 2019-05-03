@@ -35,7 +35,7 @@ const BABEL_CONFIG = {
   plugins: ['@babel/proposal-class-properties']
 };
 
-module.exports = {
+const CONFIG = {
   mode: 'development',
 
   entry: {
@@ -111,4 +111,15 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.EnvironmentPlugin(['MapboxAccessToken'])
   ]
+};
+
+module.exports = (env = {}) => {
+  const config = Object.assign({}, CONFIG);
+
+  // This switch between streaming and static file loading
+  config.plugins = config.plugins.concat([
+    new webpack.DefinePlugin({__IS_LOCAL__: JSON.stringify(Boolean(env.local))})
+  ]);
+
+  return config;
 };
